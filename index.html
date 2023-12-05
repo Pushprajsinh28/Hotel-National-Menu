@@ -1219,6 +1219,61 @@
             const subItemTable = element.nextElementSibling;
             subItemTable.style.display = (subItemTable.style.display === 'none' || subItemTable.style.display === '') ? 'table' : 'none';
         }
+
+        
+    function toggleSubItemTable(element) {
+        const subItemTable = element.nextElementSibling;
+        subItemTable.style.display = (subItemTable.style.display === 'none' || subItemTable.style.display === '') ? 'table' : 'none';
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.querySelector('#search input[type="text"]');
+        const menuItems = document.querySelectorAll('.main-item');
+
+        searchInput.addEventListener('input', function (event) {
+            const searchText = event.target.value.toLowerCase();
+            const suggestions = [];
+
+            menuItems.forEach(function (menuItem) {
+                const itemName = menuItem.textContent.toLowerCase();
+                if (itemName.includes(searchText)) {
+                    menuItem.style.display = 'flex';
+                    suggestions.push(itemName);
+                } else {
+                    menuItem.style.display = 'none';
+                    menuItem.nextElementSibling.style.display = 'none'; // Hide corresponding sub-items
+                }
+            });
+
+            // Show suggestions
+            showSuggestions(suggestions);
+        });
+
+        function showSuggestions(suggestions) {
+            const suggestionsList = document.querySelector('#suggestions');
+            suggestionsList.innerHTML = '';
+
+            suggestions.forEach(function (suggestion) {
+                const li = document.createElement('li');
+                li.textContent = suggestion;
+                li.addEventListener('click', function () {
+                    searchInput.value = suggestion;
+                    menuItems.forEach(function (menuItem) {
+                        if (menuItem.textContent.toLowerCase() === suggestion) {
+                            menuItem.style.display = 'flex';
+                        } else {
+                            menuItem.style.display = 'none';
+                            menuItem.nextElementSibling.style.display = 'none'; // Hide corresponding sub-items
+                        }
+                    });
+                    suggestionsList.innerHTML = '';
+                });
+                suggestionsList.appendChild(li);
+            });
+        }
+    });
+
+        
     </script>
 
 </body>
